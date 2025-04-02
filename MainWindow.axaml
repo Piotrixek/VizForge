@@ -1,0 +1,62 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:VizForge"
+        xmlns:lc="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
+        mc:Ignorable="d"
+        Width="1200" Height="800"
+        x:Class="VizForge.MainWindow"
+        Title="VizForge - Scientific Data Dashboard"
+        FontFamily="Segoe UI">
+    
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <DockPanel Margin="20" Background="#F8F9FA">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="15" Margin="0 0 0 20">
+            <Button Content="📁 Import Data" Command="{Binding LoadDataCommand}" 
+                    Padding="15 8" CornerRadius="5" Background="#4CAF50" Foreground="White"/>
+            <ComboBox Items="{Binding ChartTypes}" SelectedItem="{Binding SelectedChartType}"
+                     Width="200" PlaceholderText="Select Chart Type"/>
+            <Button Content="📤 Export Data" Padding="15 8" CornerRadius="5" Background="#2196F3" Foreground="White"/>
+        </StackPanel>
+        <Grid ColumnDefinitions="300,*" Margin="0 10">
+            <ScrollViewer Grid.Column="0" Margin="0 0 20 0">
+                <StackPanel Spacing="15">
+                    <Border Background="White" CornerRadius="10" Padding="15">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Data Filters" FontWeight="Bold" Margin="0 0 0 5"/>
+                            <ComboBox Items="{Binding NumericColumns}" SelectedItem="{Binding XAxisColumn}"
+                                      PlaceholderText="X-Axis Column"/>
+                            <ComboBox Items="{Binding NumericColumns}" SelectedItem="{Binding YAxisColumn}"
+                                      PlaceholderText="Y-Axis Column"/>
+                            <Slider Minimum="0" Maximum="100" Value="{Binding DataRange}"
+                                    Margin="0 10" TickFrequency="10"/>
+                            <TextBlock Text="{Binding DataRange, StringFormat='Data Range: {0}%'}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="White" CornerRadius="10" Padding="15">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Chart Settings" FontWeight="Bold"/>
+                            <ColorPicker SelectedColor="{Binding ChartColor}"
+                                         Header="Series Color"/>
+                            <CheckBox Content="Show Grid" IsChecked="{Binding ShowGrid}"/>
+                            <CheckBox Content="Show Legend" IsChecked="{Binding ShowLegend}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+            <Border Grid.Column="1" Background="White" CornerRadius="10" Padding="15">
+                <lc:CartesianChart
+                    Series="{Binding ChartSeries}"
+                    XAxes="{Binding XAxes}"
+                    YAxes="{Binding YAxes}"
+                    LegendPosition="{Binding LegendPosition}"
+                    ZoomMode="X"/>
+            </Border>
+        </Grid>
+    </DockPanel>
+</Window>
